@@ -622,6 +622,7 @@ class StringToHtmlConvertor {
         markdown[i] === "^" &&
         markdown[i + 1] === "("
       ) {
+        console.log("SAdada");
         // Check if it's escaped (preceded by backslash)
         if (i > 0 && markdown[i - 1] === "\\") {
           result += "^(";
@@ -805,7 +806,7 @@ class StringToHtmlConvertor {
 
         // Closing tag
         const content = markdown.substring(tagStart, i);
-        result += "<span class='warning'>" + content + "</span>";
+        result += "<span class='text-red-600 font-bold'>" + content + "</span>";
         insideTag = false;
         tagStart = -1;
         i += 2; // Skip )!
@@ -819,7 +820,7 @@ class StringToHtmlConvertor {
 
     // Handle unclosed tag
     if (insideTag) {
-      result += "!(" + html.substring(tagStart);
+      result += "!(" + markdown.substring(tagStart);
     }
 
     return result;
@@ -828,30 +829,47 @@ class StringToHtmlConvertor {
   textEmojiConvertor(markdown: string): string {
     let found = false;
     let text = "";
-    for (let i = 0; i < markdown.length; i++) {
+    let i = 0;
+
+    while (i < markdown.length) {
+      // Check for start pattern ": ("
       if (
         markdown[i] === ":" &&
+        i + 2 < markdown.length &&
         markdown[i + 1] === " " &&
-        markdown[i - 1] !== "\\" &&
+        (i === 0 || markdown[i - 1] !== "\\") &&
         markdown[i + 2] === "("
       ) {
         found = true;
-        text = "";
+        text = ""; // Reset text when starting new emoji pattern
+        i += 3; // Skip past ": ("
+        continue;
       }
+
+      // If we're inside an emoji pattern, collect the text
       if (found) {
-        text += markdown[i];
-      }
-      if (markdown[i] === ")" && found) {
-        found = false;
-        const emoji = this.emojiMap[text];
-        if (emoji) {
-          markdown =
-            markdown.slice(0, i - text.length - 2) +
-            emoji +
-            markdown.slice(i + 1);
+        if (markdown[i] === ")") {
+          // Found closing parenthesis - try to replace
+          found = false;
+          const emoji = this.emojiMap[text];
+          if (emoji) {
+            // Calculate positions for replacement
+            const startPos = i - text.length - 3; // Position of ":"
+            markdown =
+              markdown.slice(0, startPos) + emoji + markdown.slice(i + 1);
+            // Reset index to check from the emoji position
+            i = startPos;
+          }
+          text = ""; // Reset text
+        } else {
+          // Collect emoji key characters
+          text += markdown[i];
         }
       }
+
+      i++;
     }
+
     return markdown;
   }
 }
