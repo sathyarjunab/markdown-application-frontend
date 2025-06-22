@@ -1,4 +1,16 @@
 class StringToHtmlConvertor {
+  private emojiMap: Record<string, string> = {
+    smile: "😄",
+    grin: "😁",
+    joy: "😂",
+    wink: "😉",
+    heart: "❤️",
+    thumbs_up: "👍",
+    cry: "😢",
+    fire: "🔥",
+    star: "⭐",
+    check: "✅",
+  };
   /**
    * markdown: string
    * Converts markdown headings to HTML headings.
@@ -732,6 +744,80 @@ class StringToHtmlConvertor {
     // Handle unclosed tag
     if (insideTag) {
       result += "~(" + html.substring(tagStart);
+    }
+
+    return result;
+  }
+
+  /**
+   * Converts markdown warning text to HTML warning text.
+   * It looks for text wrapped in !() for warning.
+   * @param markdown
+   * @returns
+   */
+
+  warningConvertor(markdown: string): string {
+    let result = "";
+    let i = 0;
+    let insideTag = false;
+    let tagStart = -1;
+
+    while (i < markdown.length) {
+      // Check if we're at a potential !( sequence
+      if (
+        i <= markdown.length - 2 &&
+        markdown[i] === "!" &&
+        markdown[i + 1] === "("
+      ) {
+        // Check if it's escaped (preceded by backslash)
+        if (i > 0 && markdown[i - 1] === "\\") {
+          result += "!(";
+          i += 2;
+          continue;
+        }
+
+        if (!insideTag) {
+          // Opening tag
+          insideTag = true;
+          tagStart = i + 2; // Start after !(
+          i += 2;
+        } else {
+          // This shouldn't happen with this syntax, treat as regular text
+          result += markdown[i];
+          i++;
+        }
+      }
+      // Check if we're at a potential )! sequence (closing)
+      else if (
+        i <= markdown.length - 2 &&
+        markdown[i] === ")" &&
+        markdown[i + 1] === "!" &&
+        insideTag
+      ) {
+        // Check if it's escaped (preceded by backslash)
+        if (i > 0 && markdown[i - 1] === "\\") {
+          // Don't close the tag, continue collecting content
+          i += 2;
+          continue;
+        }
+
+        // Closing tag
+        const content = markdown.substring(tagStart, i);
+        result += "<span class='warning'>" + content + "</span>";
+        insideTag = false;
+        tagStart = -1;
+        i += 2; // Skip )!
+      } else {
+        if (!insideTag) {
+          result += markdown[i];
+        }
+        i++;
+      }
+    }
+
+    // Handle unclosed tag
+    if (insideTag) {
+      result += "!(" + html.substring(tagStart);
     }
 
     return result;

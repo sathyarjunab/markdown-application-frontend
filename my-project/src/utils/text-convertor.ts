@@ -1,16 +1,3 @@
-// const emojiMap: Record<string, string> = {
-//   smile: "😄",
-//   grin: "😁",
-//   joy: "😂",
-//   wink: "😉",
-//   heart: "❤️",
-//   thumbs_up: "👍",
-//   cry: "😢",
-//   fire: "🔥",
-//   star: "⭐",
-//   check: "✅",
-// };
-
 import convertor from "@/convertor/h3-convertor";
 
 export function textToHtml(markdown: string): string {
@@ -56,6 +43,7 @@ export function textToHtml(markdown: string): string {
   html = convertor.subscriptConvertor(html);
 
   // Warning (!text!)
+  html = convertor.warningConvertor(html);
 
   //  Handle  newlines and hrozontal lines
   html = convertor.emptyTagCreater(html);
