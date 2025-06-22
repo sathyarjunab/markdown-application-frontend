@@ -29,6 +29,7 @@ export function textToHtml(markdown: string): string {
   html = convertor.numberedListConvertor(html);
 
   // Bold + Italic
+  html = convertor.boldItalicConvertor(html);
   // html = html.replace(
   //   /(?<!\\)\*\*\*([\s\S]+?)\*\*\*/g,
   //   "<strong><em>$1</em></strong>"

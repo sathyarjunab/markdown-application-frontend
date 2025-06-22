@@ -228,14 +228,53 @@ class StringToHtmlConvertor {
   }
 
   boldItalicConvertor(markdown: string): string {
-    for (let i = 0; i < markdown.length; i++) {
-      let type: string | undefined = undefined;
-      if (markdown[i] === "*" && markdown[i + 1] === " ") {
-        markdown =
-          markdown.slice(0, i) + "<strong><em>" + markdown.slice(i + 3);
-        i += 3;
+    let result = "";
+    let i = 0;
+    let insideTag = false;
+    let tagStart = -1;
+
+    while (i < markdown.length) {
+      // Check if we're at a potential *** sequence
+      if (
+        i <= markdown.length - 3 &&
+        markdown[i] === "*" &&
+        markdown[i + 1] === "*" &&
+        markdown[i + 2] === "*"
+      ) {
+        // Check if it's escaped (preceded by backslash)
+        if (i > 0 && markdown[i - 1] === "\\") {
+          result += "***";
+          i += 3;
+          continue;
+        }
+
+        if (!insideTag) {
+          // Opening tag
+          insideTag = true;
+          tagStart = i + 3;
+          i += 3;
+        } else {
+          // Closing tag
+          const content = markdown.substring(tagStart, i);
+          result += "<strong><em>" + content + "</em></strong>";
+          insideTag = false;
+          tagStart = -1;
+          i += 3;
+        }
+      } else {
+        if (!insideTag) {
+          result += markdown[i];
+        }
+        i++;
       }
     }
+
+    // Handle unclosed tag
+    if (insideTag) {
+      result += "***" + markdown.substring(tagStart);
+    }
+
+    return result;
   }
 }
 
