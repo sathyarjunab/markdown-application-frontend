@@ -53,10 +53,9 @@ export function textToHtml(markdown: string): string {
   html = convertor.superscriptConvertor(html);
 
   // Subscript (~text~)
-  // html = html.replace(/~\((.+?)\)~/g, "<sub>$1</sub>");
+  html = convertor.subscriptConvertor(html);
 
   // Warning (!text!)
-  // html = html.replace(/!\((.+?)\)!/g, "<span class='warning'>$1</span>");
 
   //  Handle  newlines and hrozontal lines
   html = convertor.emptyTagCreater(html);

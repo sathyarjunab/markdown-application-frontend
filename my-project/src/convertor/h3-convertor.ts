@@ -661,6 +661,81 @@ class StringToHtmlConvertor {
 
     return result;
   }
+
+  /**
+   *
+   * @param markdown
+   * @returns
+   * Converts markdown subscript text to HTML subscript text.
+   * It looks for text wrapped in tildes (~text~) for subscript.
+   */
+
+  subscriptConvertor(markdown: string): string {
+    let result = "";
+    let i = 0;
+    let insideTag = false;
+    let tagStart = -1;
+
+    while (i < markdown.length) {
+      // Check if we're at a potential ~( sequence
+      if (
+        i <= markdown.length - 2 &&
+        markdown[i] === "~" &&
+        markdown[i + 1] === "("
+      ) {
+        // Check if it's escaped (preceded by backslash)
+        if (i > 0 && markdown[i - 1] === "\\") {
+          result += "~(";
+          i += 2;
+          continue;
+        }
+
+        if (!insideTag) {
+          // Opening tag
+          insideTag = true;
+          tagStart = i + 2; // Start after ~(
+          i += 2;
+        } else {
+          // This shouldn't happen with this syntax, treat as regular text
+          result += markdown[i];
+          i++;
+        }
+      }
+      // Check if we're at a potential )~ sequence (closing)
+      else if (
+        i <= markdown.length - 2 &&
+        markdown[i] === ")" &&
+        markdown[i + 1] === "~" &&
+        insideTag
+      ) {
+        // Check if it's escaped (preceded by backslash)
+        if (i > 0 && markdown[i - 1] === "\\") {
+          // Don't close the tag, continue collecting content
+          i += 2;
+          continue;
+        }
+
+        // Closing tag
+        const content = markdown.substring(tagStart, i);
+        result += "<sub>" + content + "</sub>";
+        insideTag = false;
+        tagStart = -1;
+        i += 2; // Skip )~
+      } else {
+        if (!insideTag) {
+          result += markdown[i];
+        }
+        i++;
+      }
+    }
+
+    // Handle unclosed tag
+    if (insideTag) {
+      result += "~(" + html.substring(tagStart);
+    }
+
+    return result;
+  }
 }
 
 const convertor = new StringToHtmlConvertor();
