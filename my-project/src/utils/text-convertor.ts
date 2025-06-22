@@ -47,13 +47,10 @@ export function textToHtml(markdown: string): string {
   html = convertor.highlightConvertor(html);
 
   // Escape markdown special characters
-  // html = html.replace(/\\([*~_=`#])/g, "$1");
-
-  // Handle 2+ newlines with <br> equivalents
-  // html = html.replace(/\n{2,}/g, (match) => "<br>".repeat(match.length));
+  html = convertor.removeEscapeCharacters(html);
 
   // Superscript (^text^)
-  // html = html.replace(/\^\((.+?)\)\^/g, "<sup>$1</sup>");
+  html = convertor.superscriptConvertor(html);
 
   // Subscript (~text~)
   // html = html.replace(/~\((.+?)\)~/g, "<sub>$1</sub>");
