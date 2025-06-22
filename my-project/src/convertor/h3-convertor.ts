@@ -389,6 +389,63 @@ class StringToHtmlConvertor {
 
     return result;
   }
+
+  /**
+   *
+   * @param markdown
+   * @returns
+   * Converts markdown strikethrough text to HTML strikethrough text.
+   * It looks for text wrapped in double tildes (~~text~~) for str
+   */
+
+  strikethroughConvertor(markdown: string): string {
+    let result = "";
+    let i = 0;
+    let insideTag = false;
+    let tagStart = -1;
+
+    while (i < markdown.length) {
+      // Check if we're at a potential ~~ sequence
+      if (
+        i <= markdown.length - 2 &&
+        markdown[i] === "~" &&
+        markdown[i + 1] === "~"
+      ) {
+        // Check if it's escaped (preceded by backslash)
+        if (i > 0 && markdown[i - 1] === "\\") {
+          result += "~~";
+          i += 2;
+          continue;
+        }
+
+        if (!insideTag) {
+          // Opening tag
+          insideTag = true;
+          tagStart = i + 2;
+          i += 2;
+        } else {
+          // Closing tag
+          const content = markdown.substring(tagStart, i);
+          result += "<del>" + content + "</del>";
+          insideTag = false;
+          tagStart = -1;
+          i += 2;
+        }
+      } else {
+        if (!insideTag) {
+          result += markdown[i];
+        }
+        i++;
+      }
+    }
+
+    // Handle unclosed tag
+    if (insideTag) {
+      result += "~~" + html.substring(tagStart);
+    }
+
+    return result;
+  }
 }
 
 const convertor = new StringToHtmlConvertor();

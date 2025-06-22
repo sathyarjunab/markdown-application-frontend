@@ -38,7 +38,7 @@ export function textToHtml(markdown: string): string {
   html = convertor.italicConvertor(html);
 
   // Strikethrough
-  // html = html.replace(/(?<!\\)~~(.+?)~~/g, "<del>$1</del>");
+  html = convertor.strikethroughConvertor(html);
 
   // Inline code
   // html = html.replace(/(?<!\\)`(.+?)`/g, "<code>$1</code>");
