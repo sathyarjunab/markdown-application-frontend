@@ -41,7 +41,7 @@ export function textToHtml(markdown: string): string {
   html = convertor.strikethroughConvertor(html);
 
   // Inline code
-  // html = html.replace(/(?<!\\)`(.+?)`/g, "<code>$1</code>");
+  html = convertor.inlineCodeConvertor(html);
 
   // Highlight
   // html = html.replace(/(?<!\\)==([\s\S]+?)==/g, "<mark>$1</mark>");
