@@ -499,6 +499,87 @@ class StringToHtmlConvertor {
 
     return result;
   }
+
+  /**
+   *
+   * @param markdown
+   * @returns
+   * Converts markdown highlight text to HTML highlight text.
+   * It looks for text wrapped in double equal signs (==text==) for highlight.
+   */
+  highlightConvertor(markdown: string): string {
+    let result = "";
+    let i = 0;
+    let insideTag = false;
+    let tagStart = -1;
+
+    while (i < markdown.length) {
+      // Check if we're at a potential == sequence
+      if (
+        i <= markdown.length - 2 &&
+        markdown[i] === "=" &&
+        markdown[i + 1] === "="
+      ) {
+        // Check if it's escaped (preceded by backslash)
+        if (i > 0 && markdown[i - 1] === "\\") {
+          result += "==";
+          i += 2;
+          continue;
+        }
+
+        if (!insideTag) {
+          // Opening tag
+          insideTag = true;
+          tagStart = i + 2;
+          i += 2;
+        } else {
+          // Closing tag
+          const content = markdown.substring(tagStart, i);
+          result += "<mark>" + content + "</mark>";
+          insideTag = false;
+          tagStart = -1;
+          i += 2;
+        }
+      } else {
+        if (!insideTag) {
+          result += markdown[i];
+        }
+        i++;
+      }
+    }
+
+    // Handle unclosed tag
+    if (insideTag) {
+      result += "==" + html.substring(tagStart);
+    }
+
+    return result;
+  }
+
+  removeEscapeCharacters(markdown: string): string {
+    let result = "";
+    let i = 0;
+
+    // Use Set for O(1) lookup instead of array includes
+    const escapableChars = new Set(["*", "~", "_", "=", "`", "#"]);
+
+    while (i < markdown.length) {
+      if (
+        markdown[i] === "\\" &&
+        i + 1 < markdown.length &&
+        escapableChars.has(markdown[i + 1])
+      ) {
+        // Skip backslash, add escaped character
+        result += markdown[i + 1];
+        i += 2;
+      } else {
+        result += markdown[i];
+        i++;
+      }
+    }
+
+    return result;
+  }
 }
 
 const convertor = new StringToHtmlConvertor();
