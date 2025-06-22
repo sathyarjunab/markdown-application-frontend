@@ -1,3 +1,5 @@
+import { text } from "stream/consumers";
+
 class StringToHtmlConvertor {
   private emojiMap: Record<string, string> = {
     smile: "😄",
@@ -821,6 +823,36 @@ class StringToHtmlConvertor {
     }
 
     return result;
+  }
+
+  textEmojiConvertor(markdown: string): string {
+    let found = false;
+    let text = "";
+    for (let i = 0; i < markdown.length; i++) {
+      if (
+        markdown[i] === ":" &&
+        markdown[i + 1] === " " &&
+        markdown[i - 1] !== "\\" &&
+        markdown[i + 2] === "("
+      ) {
+        found = true;
+        text = "";
+      }
+      if (found) {
+        text += markdown[i];
+      }
+      if (markdown[i] === ")" && found) {
+        found = false;
+        const emoji = this.emojiMap[text];
+        if (emoji) {
+          markdown =
+            markdown.slice(0, i - text.length - 2) +
+            emoji +
+            markdown.slice(i + 1);
+        }
+      }
+    }
+    return markdown;
   }
 }
 

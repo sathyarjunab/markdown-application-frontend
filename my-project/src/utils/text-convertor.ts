@@ -48,9 +48,8 @@ export function textToHtml(markdown: string): string {
   //  Handle  newlines and hrozontal lines
   html = convertor.emptyTagCreater(html);
 
-  // html = html.replace(/:([a-zA-Z0-9_+-]+):/g, (match, p1) => {
-  //   return emojiMap[p1] || match;
-  // });
+  // Emojis
+  html = convertor.textEmojiConvertor(html);
 
   console.log(html);
 
