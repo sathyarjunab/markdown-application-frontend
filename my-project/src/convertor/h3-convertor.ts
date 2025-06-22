@@ -287,7 +287,7 @@ class StringToHtmlConvertor {
    *
    * @param markdown
    * @returns
-   * Converts markdown bold text to HTML bold text.
+   * Converts markdown bold text to HTML bold text.`
    * It looks for text wrapped in two asterisks (**text**) for bold.
    */
   boldConvertor(markdown: string): string {
@@ -334,6 +334,57 @@ class StringToHtmlConvertor {
     // Handle unclosed tag
     if (insideTag) {
       result += "**" + html.substring(tagStart);
+    }
+
+    return result;
+  }
+
+  /**
+   * Converts markdown italic text to HTML italic text.
+   * It looks for text wrapped in underscores (_text_) for italic.
+   * @param markdown string
+   * @returns string
+   */
+  italicConvertor(markdown: string): string {
+    let result = "";
+    let i = 0;
+    let insideTag = false;
+    let tagStart = -1;
+
+    while (i < markdown.length) {
+      // Check if we're at an underscore
+      if (markdown[i] === "_") {
+        // Check if it's escaped (preceded by backslash)
+        if (i > 0 && markdown[i - 1] === "\\") {
+          result += "_";
+          i++;
+          continue;
+        }
+
+        if (!insideTag) {
+          // Opening tag
+          insideTag = true;
+          tagStart = i + 1;
+          i++;
+        } else {
+          // Closing tag
+          const content = markdown.substring(tagStart, i);
+          result += "<em>" + content + "</em>";
+          insideTag = false;
+          tagStart = -1;
+          i++;
+        }
+      } else {
+        if (!insideTag) {
+          result += markdown[i];
+        }
+        i++;
+      }
+    }
+
+    // Handle unclosed tag
+    if (insideTag) {
+      result += "_" + markdown.substring(tagStart);
     }
 
     return result;
