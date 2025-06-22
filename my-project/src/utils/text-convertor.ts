@@ -35,7 +35,7 @@ export function textToHtml(markdown: string): string {
   html = convertor.boldConvertor(html);
 
   // Italic
-  // html = html.replace(/(?<!\\)_(.+?)_/g, "<em>$1</em>");
+  html = convertor.italicConvertor(html);
 
   // Strikethrough
   // html = html.replace(/(?<!\\)~~(.+?)~~/g, "<del>$1</del>");
