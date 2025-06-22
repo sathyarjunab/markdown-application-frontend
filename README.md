@@ -49,4 +49,4 @@ A full-featured **Markdown Previewer** built with **Next.js**, designed to conve
 
 ```bash
 git clone https://github.com/your-username/markdown-previewer.git
-cd markdown-previewer
+cd my-project
