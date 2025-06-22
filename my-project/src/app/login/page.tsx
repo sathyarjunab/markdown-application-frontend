@@ -32,7 +32,8 @@ export default function LoginPage() {
 
       if (res.ok) {
         toast("Login successful!", {});
-        router.push("/file");
+        localStorage.setItem("userToken", data.token);
+        router.push("/dashboard");
       } else {
         toast("Login failed", {
           description: data.message || "Invalid credentials",

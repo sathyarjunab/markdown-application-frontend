@@ -2,10 +2,13 @@
 
 import { textToHtml } from "@/utils/text-convertor";
 import { useEffect, useState } from "react";
+import { useLocalStorage } from "@/app/auth-provider";
 
-export default function Editor() {
+export default function Editor({ filename }: { filename: string }) {
   const [text, setText] = useState("");
   const [markdown, setMarkdown] = useState("");
+
+  const { userToken } = useLocalStorage();
 
   useEffect(() => {
     const convertMarkdownToHtml = async () => {
@@ -16,14 +19,30 @@ export default function Editor() {
     };
 
     convertMarkdownToHtml();
+    getHtmlFromFile();
   }, [text]);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
   };
 
+  const getHtmlFromFile = async () => {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/files/${filename}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userToken}`,
+        },
+      }
+    );
+    const data = await response.json();
+    setText(data.content);
+  };
+
   return (
-    <div className="flex h-screen p-4 gap-4">
+    <div className="flex h-screen p-4 gap-4 flex-grow-1">
       {/* Left side - Input */}
       <textarea
         value={text}

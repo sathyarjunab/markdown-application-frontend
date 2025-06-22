@@ -20,7 +20,7 @@ export const LocalStorageProvider = ({ children }: Props) => {
   const [userToken, setUserToken] = useState<string>("");
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
+    const storedToken = localStorage.getItem("userToken");
     if (storedToken) {
       setUserToken(storedToken);
     }
