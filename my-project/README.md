@@ -1,22 +1,45 @@
 # 📝 Markdown Previewer - Next.js
 
-This is a powerful and customizable **Markdown Previewer** built using **Next.js**. It supports real-time conversion of markdown into rich HTML, including custom extensions like checkboxes, emojis, superscripts, subscripts, and more!
+A full-featured **Markdown Previewer** built with **Next.js**, designed to convert markdown text into styled HTML in real time. This project includes custom markdown extensions like emoji support, checkboxes, superscripts, subscripts, warnings, and more — with clean, modular parsing logic.
 
 ---
 
 ## 🚀 Features
 
-- 🔄 Live Markdown-to-HTML preview
-- ✅ Task checkboxes: `- [ ]`, `- [x]`
-- 🔡 Headings: `###`, `##`, etc.
-- 📋 Bullet points: `- Item`
-- 😄 Emojis via `:smile:`
-- 🧠 Custom markdown syntax:
-  - `(^text^)` → Superscript
-  - `(~text~)` → Subscript
-  - `(!text!)` → Warning text
-- ✨ Clean layout with input on the left, preview on the right
-- ⚡ Built with Next.js and React
+### ✅ Implemented
+
+- ### Headings (`### Heading`)
+- ✅ Task Checkboxes (`- [ ]`, `- [x]`)
+- 🔘 Bulleted & Numbered Lists (`- item`, `1. item`)
+- 🧹 Automatic `<br>` tag handling for multiple newlines
+- 💻 Modular converter functions (`h3Convertor`, `checkboxConvertor`, etc.)
+- 🛠️ Horizontal line or empty tag parsing
+
+### ✨ Optional (Planned / Commented in Code)
+
+- **Bold + Italic:** `***text***` → `<strong><em>text</em></strong>`
+- **Bold:** `**text**` → `<strong>text</strong>`
+- **Italic:** `_text_` → `<em>text</em>`
+- **Strikethrough:** `~~text~~` → `<del>text</del>`
+- **Inline Code:** `` `code` `` → `<code>code</code>`
+- **Highlight:** `==text==` → `<mark>text</mark>`
+- **Superscript:** `^(text)^` → `<sup>text</sup>`
+- **Subscript:** `~(text)~` → `<sub>text</sub>`
+- **Warning Text:** `!(text)!` → `<span class='warning'>text</span>`
+- **Emoji Parsing:** `:smile:` → 😄 using `emojiMap`
+
+---
+
+## 🧠 Custom Syntax Examples
+
+| Markdown | Rendered HTML |
+|----------|----------------|
+| `### Hello` | `<h3>Hello</h3>` |
+| `- [x] Done` | ✅ Done |
+| `^(2)^` | <sup>2</sup> |
+| `~(index)~` | <sub>index</sub> |
+| `:fire:` | 🔥 (from emojiMap) |
+| `!(Be careful)!` | `<span class='warning'>Be careful</span>` |
 
 ---
 
