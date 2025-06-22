@@ -556,6 +556,12 @@ class StringToHtmlConvertor {
     return result;
   }
 
+  /**
+   * Removes escape characters from the markdown string.
+   * @param markdown The markdown string to process.
+   * @returns The processed string with escape characters removed.
+   */
+
   removeEscapeCharacters(markdown: string): string {
     let result = "";
     let i = 0;
