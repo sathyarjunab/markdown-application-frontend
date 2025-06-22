@@ -30,13 +30,9 @@ export function textToHtml(markdown: string): string {
 
   // Bold + Italic
   html = convertor.boldItalicConvertor(html);
-  // html = html.replace(
-  //   /(?<!\\)\*\*\*([\s\S]+?)\*\*\*/g,
-  //   "<strong><em>$1</em></strong>"
-  // );
 
   // Bold
-  // html = html.replace(/(?<!\\)\*\*([\s\S]+?)\*\*/g, "<strong>$1</strong>");
+  html = convertor.boldConvertor(html);
 
   // Italic
   // html = html.replace(/(?<!\\)_(.+?)_/g, "<em>$1</em>");

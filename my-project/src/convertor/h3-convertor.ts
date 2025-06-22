@@ -227,6 +227,13 @@ class StringToHtmlConvertor {
     return markdown;
   }
 
+  /**
+   *
+   * @param markdown string
+   * @returns
+   * Converts markdown bold and italic text to HTML bold and italic text.
+   * It looks for text wrapped in three asterisks (***text***) for bold and italic,
+   */
   boldItalicConvertor(markdown: string): string {
     let result = "";
     let i = 0;
@@ -272,6 +279,61 @@ class StringToHtmlConvertor {
     // Handle unclosed tag
     if (insideTag) {
       result += "***" + markdown.substring(tagStart);
+    }
+
+    return result;
+  }
+  /**
+   *
+   * @param markdown
+   * @returns
+   * Converts markdown bold text to HTML bold text.
+   * It looks for text wrapped in two asterisks (**text**) for bold.
+   */
+  boldConvertor(markdown: string): string {
+    let result = "";
+    let i = 0;
+    let insideTag = false;
+    let tagStart = -1;
+
+    while (i < markdown.length) {
+      // Check if we're at a potential ** sequence
+      if (
+        i <= markdown.length - 2 &&
+        markdown[i] === "*" &&
+        markdown[i + 1] === "*"
+      ) {
+        // Check if it's escaped (preceded by backslash)
+        if (i > 0 && markdown[i - 1] === "\\") {
+          result += "**";
+          i += 2;
+          continue;
+        }
+
+        if (!insideTag) {
+          // Opening tag
+          insideTag = true;
+          tagStart = i + 2;
+          i += 2;
+        } else {
+          // Closing tag
+          const content = markdown.substring(tagStart, i);
+          result += "<strong>" + content + "</strong>";
+          insideTag = false;
+          tagStart = -1;
+          i += 2;
+        }
+      } else {
+        if (!insideTag) {
+          result += markdown[i];
+        }
+        i++;
+      }
+    }
+
+    // Handle unclosed tag
+    if (insideTag) {
+      result += "**" + html.substring(tagStart);
     }
 
     return result;
