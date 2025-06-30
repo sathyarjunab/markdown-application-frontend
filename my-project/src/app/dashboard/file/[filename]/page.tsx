@@ -4,7 +4,7 @@ import { textToHtml } from "@/utils/text-convertor";
 import { useEffect, useState } from "react";
 import { useLocalStorage } from "@/app/auth-provider";
 
-export default function Editor({ filename }: { filename: string }) {
+export default function Editor({ fileId }: { fileId: string }) {
   const [text, setText] = useState("");
   const [markdown, setMarkdown] = useState("");
 
@@ -28,7 +28,7 @@ export default function Editor({ filename }: { filename: string }) {
 
   const getHtmlFromFile = async () => {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/files/${filename}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/files/${fileId}`,
       {
         method: "GET",
         headers: {
